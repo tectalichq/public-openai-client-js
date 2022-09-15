@@ -1,0 +1,7 @@
+.gitattributes export-ignore
+.github/ export-ignore
+.gitignore export-ignore
+artifacts/ export-ignore
+jest.config.js export-ignore
+manifest.json export-ignore
+tests/ export-ignore

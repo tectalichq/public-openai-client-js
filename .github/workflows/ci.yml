@@ -1,0 +1,68 @@
+# https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions
+
+on:
+  # Run on every commit to all branches, but not on tags.
+  push:
+    branches:
+      - '**'
+  # Allow manually triggering the workflow.
+  workflow_dispatch:
+
+# Cancels all previous workflow runs for the same branch that have not yet completed.
+concurrency:
+  # The concurrency group contains the workflow name and the branch name.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+name: CI
+
+jobs:
+  test:
+    name: Test
+
+    timeout-minutes: 5
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          - windows-latest
+        test-type:
+          - test
+        include:
+          # Coverage test is ubuntu only.
+          - test-type: coverage
+            os: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install
+
+      - name: ${{ matrix.test-type }} with jest
+        run: npm run ${{ matrix.test-type }}
+
+      - name: test build output
+        if: matrix.test-type == 'test' && matrix.os == 'ubuntu-latest'
+        run: |
+          npm run build
+          git status
+          if [ -n "$(git status --porcelain)" ]; then
+            exit 1
+          fi
+
+      - name: Send code coverage report to Codecov.io
+        if: matrix.test-type == 'coverage'
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
