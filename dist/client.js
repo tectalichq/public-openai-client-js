@@ -15,7 +15,16 @@ class default_1 {
   }
 
   request (request, config) {
-    return this.instance.request(__classPrivateFieldGet(this, _instances, 'm', _configRequest).call(this, request, config));
+    return new Promise((resolve, reject) => {
+      this.instance
+        .request(__classPrivateFieldGet(this, _instances, 'm', _configRequest).call(this, request, config))
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 }
 exports.default = default_1;

@@ -1,6 +1,6 @@
 {
   "name": "@tectalic/openai",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Tectalic OpenAI REST API Client",
   "homepage": "https://tectalic.com/apis/openai",
   "keywords": [

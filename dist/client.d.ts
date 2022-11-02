@@ -1,7 +1,8 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import Completions from './handlers/completions';
-export declare type Response = Promise<AxiosResponse<any, any>>;
-export interface Request {
+export interface ClientPromise<Data> extends AxiosPromise<Data> {
+}
+export interface ClientRequest {
     method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS';
     path: string;
     data?: object;
@@ -13,5 +14,5 @@ export default class {
     instance: AxiosInstance;
     completions: Completions;
     constructor(instance: AxiosInstance);
-    request(request: Request, config?: AxiosRequestConfig): Response;
+    request<Data>(request: ClientRequest, config?: AxiosRequestConfig): ClientPromise<Data>;
 }

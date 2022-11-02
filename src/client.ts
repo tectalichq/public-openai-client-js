@@ -1,8 +1,9 @@
-import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AxiosInstance, AxiosPromise, AxiosRequestConfig } from 'axios';
 import Completions from './handlers/completions';
 
-export type Response = Promise<AxiosResponse<any, any>>;
-export interface Request {
+export interface ClientPromise<Data> extends AxiosPromise<Data> {}
+
+export interface ClientRequest {
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'OPTIONS';
   path: string;
   data?: object;
@@ -20,7 +21,7 @@ export default class {
   }
 
   #configRequest(
-    request: Request,
+    request: ClientRequest,
     config?: AxiosRequestConfig
   ): AxiosRequestConfig {
     if (!config) {
@@ -60,7 +61,16 @@ export default class {
     return config;
   }
 
-  request(request: Request, config?: AxiosRequestConfig): Response {
-    return this.instance.request(this.#configRequest(request, config));
+  request<Data>(request: ClientRequest, config?: AxiosRequestConfig): ClientPromise<Data> {
+    return new Promise((resolve, reject) => {
+      this.instance
+        .request<Data>(this.#configRequest(request, config))
+        .then((response) => {
+          resolve(response);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 }
