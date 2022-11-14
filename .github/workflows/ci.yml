@@ -32,11 +32,13 @@ jobs:
           - ubuntu-latest
           - windows-latest
         test-type:
-          - test
+          - unit
         include:
-          # Coverage test is ubuntu only.
-          - test-type: coverage
-            os: ubuntu-latest
+          # Coverage and integration test is ubuntu only.
+          - os: ubuntu-latest
+            test-type: integration
+          - os: ubuntu-latest
+            test-type: coverage
 
     steps:
       - name: Checkout
@@ -48,8 +50,14 @@ jobs:
           node-version: 16
       - run: npm install
 
-      - name: ${{ matrix.test-type }} with jest
-        run: npm run ${{ matrix.test-type }}
+      - name: Install and run @stoplight/prism
+        if: matrix.test-type == 'integration'
+        run: |
+          npm install -g @stoplight/prism-cli
+          prism mock test/openapi.yaml >artifacts/prism.log 2>&1 &
+
+      - name: Test ${{ matrix.test-type }} with jest
+        run: npm run test:${{ matrix.test-type }}
 
       - name: test build output
         if: matrix.test-type == 'test' && matrix.os == 'ubuntu-latest'
@@ -59,6 +67,13 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             exit 1
           fi
+
+      - name: Upload prism log
+        if: matrix.test-type == 'integration'
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }}-prism.log
+          path: artifacts/prism.log
 
       - name: Send code coverage report to Codecov.io
         if: matrix.test-type == 'coverage'

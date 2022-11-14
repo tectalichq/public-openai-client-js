@@ -1,2 +1,1 @@
-export default interface CreateRequestLogitBias {
-}
+export default interface CreateRequestLogitBias {}

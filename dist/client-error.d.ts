@@ -1,3 +1,4 @@
-export default class ClientError extends Error {
-    constructor(message: string);
+import { AxiosError } from 'axios';
+export default class ClientError extends AxiosError {
+  constructor(from: string | Error);
 }
