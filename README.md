@@ -185,6 +185,6 @@ If you have any questions or feedback, please use the [discussion board](https:/
 
 ## License
 
-This software is copyright (c) 2022 [Tectalic](https://tectalic.com).
+This software is copyright (c) 2022-present [Tectalic](https://tectalic.com).
 
 For copyright and license information, please view the **LICENSE** file.
