@@ -1,4 +1,7 @@
 import { AxiosInstance, AxiosPromise, AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import AudioTranscriptions from './handlers/audio-transcriptions';
+import AudioTranslations from './handlers/audio-translations';
+import ChatCompletions from './handlers/chat-completions';
 import Completions from './handlers/completions';
 import Edits from './handlers/edits';
 import Embeddings from './handlers/embeddings';
@@ -35,6 +38,10 @@ export default class {
    */
   completions: Completions;
   /**
+   * Access to the ChatCompletions handler.
+   */
+  chatCompletions: ChatCompletions;
+  /**
    * Access to the Edits handler.
    */
   edits: Edits;
@@ -42,6 +49,14 @@ export default class {
    * Access to the Embeddings handler.
    */
   embeddings: Embeddings;
+  /**
+   * Access to the AudioTranscriptions handler.
+   */
+  audioTranscriptions: AudioTranscriptions;
+  /**
+   * Access to the AudioTranslations handler.
+   */
+  audioTranslations: AudioTranslations;
   /**
    * Access to the Files handler.
    */
@@ -83,6 +98,11 @@ export default class {
    */
   moderations: Moderations;
   constructor(instance: AxiosInstance);
+  /**
+   * Merge various parts to the request.
+   * @internal
+   */
+  configRequest(request: ClientRequest, config?: AxiosRequestConfig): AxiosRequestConfig;
   /**
    * Perform the specified HTTP request.
    */

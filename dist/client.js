@@ -13,13 +13,16 @@ const __importDefault =
   function (mod) {
     return mod && mod.__esModule ? mod : { default: mod };
   };
-let _instances, _encodeBody, _includeInHeader, _mergeHeaders, _configRequest;
+let _instances, _encodeBody, _includeInHeader, _mergeHeaders;
 Object.defineProperty(exports, '__esModule', { value: true });
 const form_data_1 = __importDefault(require('form-data'));
 const fs_1 = require('fs');
 const path_1 = __importDefault(require('path'));
 const qs_1 = __importDefault(require('qs'));
 const client_error_1 = __importDefault(require('./client-error'));
+const audio_transcriptions_1 = __importDefault(require('./handlers/audio-transcriptions'));
+const audio_translations_1 = __importDefault(require('./handlers/audio-translations'));
+const chat_completions_1 = __importDefault(require('./handlers/chat-completions'));
 const completions_1 = __importDefault(require('./handlers/completions'));
 const edits_1 = __importDefault(require('./handlers/edits'));
 const embeddings_1 = __importDefault(require('./handlers/embeddings'));
@@ -44,6 +47,10 @@ class default_1 {
      */
     this.completions = new completions_1.default(this);
     /**
+     * Access to the ChatCompletions handler.
+     */
+    this.chatCompletions = new chat_completions_1.default(this);
+    /**
      * Access to the Edits handler.
      */
     this.edits = new edits_1.default(this);
@@ -51,6 +58,14 @@ class default_1 {
      * Access to the Embeddings handler.
      */
     this.embeddings = new embeddings_1.default(this);
+    /**
+     * Access to the AudioTranscriptions handler.
+     */
+    this.audioTranscriptions = new audio_transcriptions_1.default(this);
+    /**
+     * Access to the AudioTranslations handler.
+     */
+    this.audioTranslations = new audio_translations_1.default(this);
     /**
      * Access to the Files handler.
      */
@@ -95,12 +110,57 @@ class default_1 {
   }
 
   /**
+   * Merge various parts to the request.
+   * @internal
+   */
+  configRequest (request, config) {
+    if (!config) {
+      config = {};
+    }
+    config.url = request.path;
+    config.method = request.method;
+    // HTTP Parameters.
+    if (request.params) {
+      if (!config.params) {
+        config.params = {};
+      }
+      for (const param of Object.keys(request.params)) {
+        if (!config.params[param]) {
+          config.params[param] = request.params[param];
+        }
+      }
+    }
+    // Merge Headers.
+    if (!config.headers) {
+      config.headers = {};
+    }
+    if (!request.headers) {
+      request.headers = {};
+    }
+    config.headers = __classPrivateFieldGet(this, _instances, 'm', _mergeHeaders).call(
+      this,
+      config.headers,
+      request.headers
+    );
+    // Request Body.
+    config.data = __classPrivateFieldGet(this, _instances, 'm', _encodeBody).call(this, request, config);
+    if (config.data instanceof form_data_1.default) {
+      config.headers = __classPrivateFieldGet(this, _instances, 'm', _mergeHeaders).call(
+        this,
+        config.headers,
+        config.data.getHeaders()
+      );
+    }
+    return config;
+  }
+
+  /**
    * Perform the specified HTTP request.
    */
   request (request, config) {
     return new Promise((resolve, reject) => {
       this.instance
-        .request(__classPrivateFieldGet(this, _instances, 'm', _configRequest).call(this, request, config))
+        .request(this.configRequest(request, config))
         .then((response) => {
           resolve(response);
         })
@@ -180,44 +240,4 @@ exports.default = default_1;
     }
   }
   return targetHeader;
-}),
-(_configRequest = function _configRequest (request, config) {
-  if (!config) {
-    config = {};
-  }
-  config.url = request.path;
-  config.method = request.method;
-  // HTTP Parameters.
-  if (request.params) {
-    if (!config.params) {
-      config.params = {};
-    }
-    for (const param of Object.keys(request.params)) {
-      if (!config.params[param]) {
-        config.params[param] = request.params[param];
-      }
-    }
-  }
-  // Merge Headers.
-  if (!config.headers) {
-    config.headers = {};
-  }
-  if (!request.headers) {
-    request.headers = {};
-  }
-  config.headers = __classPrivateFieldGet(this, _instances, 'm', _mergeHeaders).call(
-    this,
-    config.headers,
-    request.headers
-  );
-  // Request Body.
-  config.data = __classPrivateFieldGet(this, _instances, 'm', _encodeBody).call(this, request, config);
-  if (config.data instanceof form_data_1.default) {
-    config.headers = __classPrivateFieldGet(this, _instances, 'm', _mergeHeaders).call(
-      this,
-      config.headers,
-      config.data.getHeaders()
-    );
-  }
-  return config;
 });

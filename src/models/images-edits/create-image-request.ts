@@ -1,6 +1,7 @@
 export default interface CreateImageRequest {
   /**
-   * The image to edit. Must be a valid PNG file, less than 4MB, and square.
+   * The image to edit. Must be a valid PNG file, less than 4MB, and square. If mask
+   * is not provided, image must have transparency, which will be used as the mask.
    *
    * Must be an absolute path to a file.
    */
@@ -13,7 +14,7 @@ export default interface CreateImageRequest {
    *
    * Must be an absolute path to a file.
    */
-  mask: string;
+  mask?: string;
 
   /**
    * A text description of the desired image(s). The maximum length is 1000
@@ -56,8 +57,8 @@ export default interface CreateImageRequest {
   response_format?: string | null;
 
   /**
-   * A unique identifier representing your end-user, which will help OpenAI to
-   * monitor and detect abuse. Learn more.
+   * A unique identifier representing your end-user, which can help OpenAI to monitor
+   * and detect abuse. Learn more.
    *
    * Example: 'user-1234'
    */

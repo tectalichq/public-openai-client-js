@@ -4,6 +4,9 @@ import { createReadStream } from 'fs';
 import path from 'path';
 import qs from 'qs';
 import ClientError from './client-error';
+import AudioTranscriptions from './handlers/audio-transcriptions';
+import AudioTranslations from './handlers/audio-translations';
+import ChatCompletions from './handlers/chat-completions';
 import Completions from './handlers/completions';
 import Edits from './handlers/edits';
 import Embeddings from './handlers/embeddings';
@@ -44,6 +47,11 @@ export default class {
   completions = new Completions(this);
 
   /**
+   * Access to the ChatCompletions handler.
+   */
+  chatCompletions = new ChatCompletions(this);
+
+  /**
    * Access to the Edits handler.
    */
   edits = new Edits(this);
@@ -52,6 +60,16 @@ export default class {
    * Access to the Embeddings handler.
    */
   embeddings = new Embeddings(this);
+
+  /**
+   * Access to the AudioTranscriptions handler.
+   */
+  audioTranscriptions = new AudioTranscriptions(this);
+
+  /**
+   * Access to the AudioTranslations handler.
+   */
+  audioTranslations = new AudioTranslations(this);
 
   /**
    * Access to the Files handler.
@@ -188,8 +206,9 @@ export default class {
 
   /**
    * Merge various parts to the request.
+   * @internal
    */
-  #configRequest(request: ClientRequest, config?: AxiosRequestConfig): AxiosRequestConfig {
+  configRequest(request: ClientRequest, config?: AxiosRequestConfig): AxiosRequestConfig {
     if (!config) {
       config = {} as AxiosRequestConfig;
     }
@@ -233,7 +252,7 @@ export default class {
   request<Data>(request: ClientRequest, config?: AxiosRequestConfig): ClientPromise<Data> {
     return new Promise((resolve, reject) => {
       this.instance
-        .request<Data>(this.#configRequest(request, config))
+        .request<Data>(this.configRequest(request, config))
         .then((response) => {
           resolve(response);
         })

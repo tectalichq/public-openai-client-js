@@ -6,7 +6,7 @@ export default class Edits {
   client: Client;
   constructor(Client: Client);
   /**
-   * Creates a new edit for the provided input, instruction, and parameters
+   * Creates a new edit for the provided input, instruction, and parameters.
    *
    * Operation URL: POST /edits
    * Operation ID:  createEdit

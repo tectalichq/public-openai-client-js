@@ -40,9 +40,9 @@ export default interface CreateRequest {
   max_tokens?: number | null;
 
   /**
-   * What sampling temperature to use. Higher values means the model will take more
-   * risks. Try 0.9 for more creative applications, and 0 (argmax sampling) for ones
-   * with a well-defined answer.
+   * What sampling temperature to use, between 0 and 2. Higher values like 0.8 will
+   * make the output more random, while lower values like 0.2 will make it more
+   * focused and deterministic.
    * We generally recommend altering this or top_p but not both.
    *
    * Default Value: 1
@@ -161,8 +161,8 @@ export default interface CreateRequest {
   logit_bias?: CreateRequestLogitBias | null;
 
   /**
-   * A unique identifier representing your end-user, which will help OpenAI to
-   * monitor and detect abuse. Learn more.
+   * A unique identifier representing your end-user, which can help OpenAI to monitor
+   * and detect abuse. Learn more.
    *
    * Example: 'user-1234'
    */
