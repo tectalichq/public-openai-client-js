@@ -5,11 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.3.1 - 2023-03-20
+
+### Changed
+- Improve readme.
+
 ## 0.3.0 - 2023-03-17
+
 ### Added
 - Add support for [Chat](https://platform.openai.com/docs/api-reference/chat) with a new `ChatCompletions` handler class containing a new `create()` method.
 - Add support for [Audio transcription](https://platform.openai.com/docs/api-reference/audio) with a new `AudioTranscriptions` handler class containing a new `create()` method.
-- Add support for [AudioC translation](https://platform.openai.com/docs/api-reference/audio) with a new `AudioTranslations` handler class containing a new `create()` method.
+- Add support for [Audio translation](https://platform.openai.com/docs/api-reference/audio) with a new `AudioTranslations` handler class containing a new `create()` method.
 - Add ability to use `.env` file o control test behaviour.
 
 ### Changed
