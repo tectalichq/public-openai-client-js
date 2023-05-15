@@ -190,7 +190,7 @@ In the **Usage** code above, customize the `tectalicOpenai` argument to your nee
 
 The primary way to interact with the library is the `openaiClient` object.
 
-This `openaiClient` object contains the properties that let you quickly access the 1 API Handler.
+This `openaiClient` object contains the properties that let you quickly access the 13 API Handlers.
 
 Please see below for a complete list of supported handlers and methods.
 
